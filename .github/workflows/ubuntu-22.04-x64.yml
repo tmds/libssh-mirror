@@ -1,0 +1,29 @@
+name: Build and pack ubuntu.22.04-x64
+
+on:
+  push:
+    branches: [ "tmds_ssh_dev" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: sudo apt-get install cmake g++ zlib1g-dev libssh-dev
+    - name: Build libssh
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        make -j$(nproc)
+    - name: Create Nupkg
+      run: |
+        VERSION_SUFFIX="${{ github.run_number }}-${{ github.sha }}"
+        dotnet pack -c Release nupkg --output . /p:TargetRid=ubuntu.22.04-x64 /p:VersionSuffix="$VERSION_SUFFIX"
+    - name: Publish package
+      run: |
+        dotnet nuget push -s https://www.myget.org/F/tmds/api/v2/package -k "${{ secrets.NUGET_APIKEY }}" *.nupkg
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/tmds_ssh_dev' }}

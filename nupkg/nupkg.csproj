@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PublishBuildOutput>false</PublishBuildOutput>
+    <NoBuild>true</NoBuild>
+    <NoRestore>true</NoRestore>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <VersionPrefix>0.1.2</VersionPrefix>
+    <PackageId>libssh.$(TargetRid)</PackageId>
+    <MinGWBin>/usr/x86_64-w64-mingw32/sys-root/mingw/bin</MinGWBin>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetRid)' == 'win-x64' ">
+    <Content Include="$(MinGWBin)/libgcc_s_seh-1.dll">
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="$(MinGWBin)/libcrypto-*-x64.dll">
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="$(MinGWBin)/zlib1.dll">
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="$(MinGWBin)/libssp-0.dll">
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="$(MinGWBin)/libssh.dll">
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="$(MinGWBin)/libwinpthread-1.dll">
+      <PackagePath>runtimes/win-x64/native</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetRid)' == 'ubuntu.22.04-x64' ">
+    <Content Include="$(MSBuildProjectDirectory)/../build/lib/libssh.so">
+      <PackagePath>runtimes/$(TargetRid)/native/libssh-$(TargetRid).so</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
+</Project>
